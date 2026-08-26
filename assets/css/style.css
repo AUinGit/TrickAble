@@ -81,6 +81,7 @@ body.subpage {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 16px;
 }
 
 .logo-mark,
@@ -113,8 +114,11 @@ body.subpage {
   gap: 8px;
 }
 
+/* PC 時のナビ */
+
 .global-nav {
   display: flex;
+  flex-wrap: nowrap;
   gap: 18px;
   font-size: 12px;
   letter-spacing: .14em;
@@ -134,16 +138,34 @@ body.subpage {
   color: #ffffff;
 }
 
+/* スマホ時のヘッダー調整 */
+
 @media (max-width: 720px) {
   .header-inner {
-    padding-inline: 14px;
+    padding-inline: 12px;
+    flex-wrap: wrap;              /* ロゴとナビを縦に折り返し可能に */
+    justify-content: center;
   }
+
+  .logo-mark {
+    flex: 0 0 100%;
+    display: flex;
+    justify-content: center;      /* ロゴを中央に */
+  }
+
+  .logo-svg {
+    width: 140px;                 /* モバイルでは少し大きく見せてもOK */
+  }
+
   .global-nav {
-    gap: 10px;
-    font-size: 11px;
+    flex: 0 0 100%;
+    justify-content: center;      /* ナビを中央寄せ */
+    flex-wrap: wrap;              /* 幅が足りなければ自動で折り返す */
+    gap: 10px 14px;               /* 縦横の余白 */
+    font-size: 11px;              /* 文字を少し小さく */
+    text-align: center;
   }
 }
-
 /* セクション共通 */
 
 main {
