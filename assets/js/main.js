@@ -102,35 +102,44 @@ document.addEventListener('click', (e) => {
 
     const params = new URLSearchParams();
 
-    // entry マッピング
-    //  - entry.88881716   ← お名前
-    //  - entry.1753640320 ← 電話番号
-    //  - entry.2144785332 ← ご所属
-    //  - entry.1682830520 ← お問い合わせ種別
-    //  - entry.1713069066 ← お問い合わせ内容
-    //  - entry.1711366111 ← 参考リンク・URL
+    // あなたの事前入力URLと同じ形にする：
+    // &entry.88881716 = お名前
+    // &entry.741727298= メールアドレス
+    // &entry.1753640320= 電話番号
+    // &entry.2144785332= 所属
+    // &entry.1682830520= __other_option__        ← 常に「その他」を選択状態にする
+    // &entry.1682830520.other_option_response= 種別テキスト
+    // &entry.1713069066= お問い合わせ内容
+    // &entry.1711366111= 参考リンク
 
-    params.set('entry.88881716', name);           // お名前
+    // お名前
+    params.set('entry.88881716', name);
 
+    // メールアドレス（フォーム設定とは別に、質問欄にも事前入力）
+    params.set('entry.741727298', email);
+
+    // 電話番号
     if (tel) {
-      params.set('entry.1753640320', tel);        // 電話番号
+      params.set('entry.1753640320', tel);
     }
 
+    // ご所属
     if (org) {
-      params.set('entry.2144785332', org);        // ご所属
+      params.set('entry.2144785332', org);
     }
 
-    if (type) {
-      // Googleフォーム側の「お問い合わせ種別」の選択肢ラベルと
-      // value（ここで渡す文字列）が一致している前提
-      params.set('entry.1682830520', type);
-    }
+    // お問い合わせ種別：
+    // どの選択肢を選んでも Google フォーム側では「その他」をONにし、
+    // そのテキスト欄に選択されたラベル文字列を入れる。
+    params.set('entry.1682830520', '__other_option__');
+    params.set('entry.1682830520.other_option_response', type);
 
-    // 本文はそのまま送る（メールアドレスは本文に付けない）
+    // お問い合わせ内容（メールアドレスは本文に付けない）
     params.set('entry.1713069066', message);
 
+    // 参考リンク
     if (ref) {
-      params.set('entry.1711366111', ref);        // 参考リンク
+      params.set('entry.1711366111', ref);
     }
 
     const redirectUrl = `${GOOGLE_FORM_BASE}&${params.toString()}`;
