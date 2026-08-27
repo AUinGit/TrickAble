@@ -71,7 +71,7 @@ document.addEventListener('click', (e) => {
   const form = document.getElementById('ta-contact-form');
   if (!form) return;
 
-  // GoogleフォームのベースURL（事前入力用）
+  // ★ あなたの Google フォームの「viewform?usp=pp_url」までの部分
   const GOOGLE_FORM_BASE =
     'https://docs.google.com/forms/d/e/1FAIpQLSchlnIKnr24x_NjLuduVKcPFfgoxDsuH5OpgHce6eUvyswR6Q/viewform?usp=pp_url';
 
@@ -95,24 +95,20 @@ document.addEventListener('click', (e) => {
     const message = messageEl ? messageEl.value.trim() : '';
     const ref     = refEl     ? refEl.value.trim()     : '';
 
-    // 必須チェック（contact.html 側の required と合わせておく）
+    // 必須チェック
     if (!name || !email || !type || !message) {
       alert('お名前・メールアドレス・お問い合わせ種別・お問い合わせ内容を入力してください。');
       return;
     }
 
     // Googleフォーム項目へのマッピング
-    // あなたの事前入力URLから確定した対応：
-    //  - entry.88881716           ← お名前
-    //  - entry.1753640320         ← 電話番号
-    //  - entry.2144785332         ← ご所属
-    //  - entry.1682830520         ← お問い合わせ種別（選択式／その他）
+    //  - entry.88881716                    ← お名前
+    //  - entry.1753640320                  ← 電話番号
+    //  - entry.2144785332                  ← ご所属
+    //  - entry.1682830520                  ← お問い合わせ種別
     //  - entry.1682830520.other_option_response ← 「その他」の自由入力
-    //  - entry.1713069066         ← お問い合わせ内容
-    //  - entry.1711366111         ← 参考リンク・URL
-    //
-    // メールアドレスはフォーム設定の「メールアドレス収集」でGoogle側が自動取得するので、
-    // ここからは直接いじらない（メッセージに含めたいなら本文に追記してもよい）。
+    //  - entry.1713069066                  ← お問い合わせ内容
+    //  - entry.1711366111                  ← 参考リンク・URL
 
     const params = new URLSearchParams();
 
@@ -130,16 +126,6 @@ document.addEventListener('click', (e) => {
     }
 
     // お問い合わせ種別
-    // Googleフォーム側では通常の選択肢＋「その他」がある構成なので、
-    // - 通常の4種（プロダクト企画・デスク環境・UI/インタラクション・メディア/取材）は
-    //   そのまま entry.1682830520 に入れる
-    // - TrickAble 側で「その他」を選んだ場合は、Googleフォーム側で
-    //   「その他」を選んだ状態にしつつ .other_option_response に中身を書く、という運用もできる
-    //
-    // ここではシンプルに：
-    //   通常の選択肢 → そのまま entry.1682830520 に入れる
-    //   その他       → entry.1682830520 に "__other_option__",
-    //                   entry.1682830520.other_option_response に "その他: ...本文" と入れる
     if (type === 'その他') {
       params.set('entry.1682830520', '__other_option__');
       params.set('entry.1682830520.other_option_response', 'その他');
@@ -148,16 +134,14 @@ document.addEventListener('click', (e) => {
     }
 
     // お問い合わせ内容
-    params.set('entry.1713069066', message);
+    // （メールアドレスも本文末尾にくっつけておくと履歴として見やすい）
+    const messageWithMail = `${message}\n\n[送信元メールアドレス] ${email}`;
+    params.set('entry.1713069066', messageWithMail);
 
     // 参考リンク
     if (ref) {
       params.set('entry.1711366111', ref);
     }
-
-    // 必要なら、メールアドレスを本文に追記してGoogle側にも残せる
-    // （メール収集はGoogleが別でやるが、問い合わせ履歴として本文に残ると便利）
-    // params.set('entry.1713069066', `${message}\n\n[連絡先メールアドレス] ${email}`);
 
     const redirectUrl = `${GOOGLE_FORM_BASE}&${params.toString()}`;
 
