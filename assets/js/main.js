@@ -71,29 +71,6 @@ document.addEventListener('click', (e) => {
   const form = document.getElementById('ta-contact-form');
   if (!form) return;
 
-  const typeSelect    = document.getElementById('type');
-  const typeDetailRow = document.getElementById('type-detail-row');
-
-  // ★ その他欄の表示・非表示を切り替え
-  const updateTypeDetailVisibility = () => {
-    if (!typeSelect || !typeDetailRow) return;
-    const v = typeSelect.value.trim();
-    if (v === 'その他') {
-      typeDetailRow.style.display = '';
-    } else {
-      typeDetailRow.style.display = 'none';
-    }
-  };
-
-  // 初期状態では隠しておく
-  if (typeDetailRow) {
-    typeDetailRow.style.display = 'none';
-  }
-  if (typeSelect) {
-    typeSelect.addEventListener('change', updateTypeDetailVisibility);
-  }
-
-  // Google フォームの事前入力ベースURL
   const GOOGLE_FORM_BASE =
     'https://docs.google.com/forms/d/e/1FAIpQLSchlnIKnr24x_NjLuduVKcPFfgoxDsuH5OpgHce6eUvyswR6Q/viewform?usp=pp_url';
 
@@ -118,7 +95,6 @@ document.addEventListener('click', (e) => {
     const message    = messageEl    ? messageEl.value.trim()    : '';
     const ref        = refEl        ? refEl.value.trim()        : '';
 
-    // 必須チェック
     if (!name || !email || !type || !message) {
       alert('お名前・メールアドレス・お問い合わせ種別・お問い合わせ内容を入力してください。');
       return;
@@ -126,12 +102,12 @@ document.addEventListener('click', (e) => {
 
     const params = new URLSearchParams();
 
-    // entry マッピング
+    // 事前入力URLと同じ構造で詰める
     // &entry.88881716                     = お名前
     // &entry.741727298                    = メールアドレス
     // &entry.1753640320                   = 電話番号
     // &entry.2144785332                   = 所属
-    // &entry.1682830520                   = 種別（通常） or "__other_option__"（その他）
+    // &entry.1682830520                   = 種別 or "__other_option__"
     // &entry.1682830520.other_option_response = その他の内容
     // &entry.1713069066                   = お問い合わせ内容
     // &entry.1711366111                   = 参考リンク
