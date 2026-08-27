@@ -71,7 +71,7 @@ document.addEventListener('click', (e) => {
   const form = document.getElementById('ta-contact-form');
   if (!form) return;
 
-  // あなたの Google フォームの事前入力URLの「ベース」
+  // Google フォームの事前入力ベースURL
   const GOOGLE_FORM_BASE =
     'https://docs.google.com/forms/d/e/1FAIpQLSchlnIKnr24x_NjLuduVKcPFfgoxDsuH5OpgHce6eUvyswR6Q/viewform?usp=pp_url';
 
@@ -94,6 +94,7 @@ document.addEventListener('click', (e) => {
     const message = messageEl ? messageEl.value.trim() : '';
     const ref     = refEl     ? refEl.value.trim()     : '';
 
+    // contact.html 側の required と合わせた必須チェック
     if (!name || !email || !type || !message) {
       alert('お名前・メールアドレス・お問い合わせ種別・お問い合わせ内容を入力してください。');
       return;
@@ -102,19 +103,31 @@ document.addEventListener('click', (e) => {
     const params = new URLSearchParams();
 
     // entry マッピング
-    params.set('entry.88881716', name);           // お名前
-    if (tel) params.set('entry.1753640320', tel); // 電話番号
-    if (org) params.set('entry.2144785332', org); // ご所属
+    //  - entry.88881716   ← お名前
+    //  - entry.1753640320 ← 電話番号
+    //  - entry.2144785332 ← ご所属
+    //  - entry.1682830520 ← お問い合わせ種別
+    //  - entry.1713069066 ← お問い合わせ内容
+    //  - entry.1711366111 ← 参考リンク・URL
 
-    if (type === 'その他') {
-      params.set('entry.1682830520', '__other_option__');
-      params.set('entry.1682830520.other_option_response', 'その他');
-    } else if (type) {
+    params.set('entry.88881716', name);           // お名前
+
+    if (tel) {
+      params.set('entry.1753640320', tel);        // 電話番号
+    }
+
+    if (org) {
+      params.set('entry.2144785332', org);        // ご所属
+    }
+
+    if (type) {
+      // Googleフォーム側の「お問い合わせ種別」の選択肢ラベルと
+      // value（ここで渡す文字列）が一致している前提
       params.set('entry.1682830520', type);
     }
 
-    const messageWithMail = `${message}\n\n[送信元メールアドレス] ${email}`;
-    params.set('entry.1713069066', messageWithMail); // お問い合わせ内容＋メール
+    // 本文はそのまま送る（メールアドレスは本文に付けない）
+    params.set('entry.1713069066', message);
 
     if (ref) {
       params.set('entry.1711366111', ref);        // 参考リンク
