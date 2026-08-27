@@ -1,247 +1,170 @@
-<!-- contact.html -->
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-  <meta charset="UTF-8">
-  <title>お問い合わせ | TrickAble Inc.</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="assets/css/style.css">
-</head>
-<body class="subpage">
+// assets/js/main.js
 
-<header class="site-header">
-  <div class="header-inner">
-    <div class="logo-mark">
-      <a href="index.html" class="logo-link" aria-label="TrickAble トップページ">
-        <svg class="logo-svg" viewBox="0 0 61.57 16.99" aria-hidden="true">
-          <g>
-            <g>
-              <rect x="0" y="0" width="10.62" height="2.12" />
-              <rect x="4.25" y="2.12" width="2.12" height="14.86" />
-              <rect x="8.49" y="4.25" width="2.12" height="12.74" />
-              <rect x="10.62" y="6.37" width="2.12" height="2.12" />
-              <rect x="14.86" y="8.49" width="2.12" height="8.49" />
-              <rect x="14.86" y="4.25" width="2.12" height="2.12" />
-              <rect x="19.11" y="6.37" width="4.25" height="2.12" />
-              <rect x="19.11" y="14.86" width="4.25" height="2.12" />
-              <rect x="19.11" y="8.49" width="2.12" height="6.37" />
-              <rect x="42.46" y="2.12" width="2.12" height="14.86" />
-              <rect x="44.59" y="14.86" width="4.25" height="2.12" />
-              <rect x="46.71" y="6.37" width="2.12" height="8.49" />
-              <rect x="44.59" y="6.37" width="2.12" height="2.12" />
-              <rect x="33.97" y="0" width="2.12" height="16.99" />
-              <rect x="38.22" y="0" width="2.12" height="16.99" />
-              <rect x="36.09" y="0" width="2.12" height="2.12" />
-              <rect x="36.09" y="8.49" width="2.12" height="2.12" />
-              <rect x="50.96" y="0" width="2.12" height="16.99" />
-              <rect x="55.2" y="6.37" width="6.37" height="2.12" />
-              <rect x="55.2" y="8.49" width="2.12" height="6.37" />
-              <rect x="55.2" y="14.86" width="6.37" height="2.12" />
-              <rect x="59.45" y="8.49" width="2.12" height="4.25" />
-              <rect x="57.33" y="10.62" width="2.12" height="2.12" />
-            </g>
-            <rect x="25.48" y="0" width="2.12" height="16.99" />
-            <rect x="27.6" y="10.62" width="2.12" height="2.12" />
-            <rect x="29.73" y="12.74" width="2.12" height="4.25" />
-            <rect x="29.73" y="4.25" width="2.12" height="6.37" />
-          </g>
-        </svg>
-      </a>
-    </div>
-    <nav class="global-nav">
-      <a href="index.html#philosophy">PHILOSOPHY</a>
-      <a href="index.html#activities">ACTIVITIES</a>
-      <a href="index.html#contact">CONTACT</a>
-      <a href="about.html">COMPANY</a>
-    </nav>
-  </div>
-</header>
+// アンカーリンクをスムーススクロールにする
+document.addEventListener('click', (e) => {
+  const target = e.target.closest('a.js-scroll, a[href^="#"]');
+  if (!target) return;
 
-<main>
-  <section class="page-hero">
-    <div class="section-inner">
-      <h1 class="page-title">CONTACT<span> お問い合わせ</span></h1>
-      <p class="section-lead">
-        Trickで全てをAbleにする――その言葉に共感していただけた方からの、<br class="sp-only">
-        プロダクト企画・デスク環境・UI設計に関するご相談を受け付けています。<br>
-        このページのフォームにご入力いただくと、内容がGoogleフォームに引き継がれます。
-      </p>
-    </div>
-  </section>
+  const href = target.getAttribute('href');
+  if (!href || !href.startsWith('#')) return;
 
-  <section class="section">
-    <div class="section-inner">
-      <div class="contact-layout">
-        <div class="contact-info">
-          <dl>
-            <div class="row">
-              <dt>社名</dt>
-              <dd>TrickAble Inc.（株式会社 TrickAble）</dd>
-            </div>
-            <div class="row">
-              <dt>MAIL</dt>
-              <dd>info@trickable.example</dd>
-            </div>
-            <div class="row">
-              <dt>備考</dt>
-              <dd>
-                添付ファイルや詳細な資料は、遷移先のGoogleフォーム上でアップロードしていただけます。
-              </dd>
-            </div>
-          </dl>
-        </div>
+  const el = document.querySelector(href);
+  if (!el) return;
 
-        <form id="ta-contact-form" class="contact-form" action="#" method="post">
-          <div class="form-row">
-            <label for="name">お名前<span style="color:#f88;"> *</span></label>
-            <input id="name" type="text" name="name" placeholder="海城 中三郎" required>
-          </div>
+  e.preventDefault();
+  const header = document.querySelector('.site-header');
+  const headerHeight = header ? header.offsetHeight : 0;
+  const rect = el.getBoundingClientRect();
+  const offset = rect.top + window.pageYOffset - headerHeight - 8;
 
-          <div class="form-row">
-            <label for="email">メールアドレス<span style="color:#f88;"> *</span></label>
-            <input id="email" type="email" name="email" placeholder="example@example.com" required>
-          </div>
+  window.scrollTo({
+    top: offset,
+    behavior: 'smooth',
+  });
+});
 
-          <div class="form-row">
-            <label for="tel">電話番号</label>
-            <input id="tel" type="tel" name="tel" placeholder="090-1234-5678">
-          </div>
+// セクション位置に応じてヘッダーナビに is-current を付与
+(function () {
+  const sections = [
+    { id: '#philosophy', link: 'a[href$="#philosophy"]' },
+    { id: '#activities', link: 'a[href$="#activities"]' },
+    { id: '#contact',    link: 'a[href$="#contact"]' },
+  ];
 
-          <div class="form-row">
-            <label for="org">ご所属（会社名・学校名など）</label>
-            <input id="org" type="text" name="org" placeholder="TrickAble Inc. / 海城高等学校 など">
-          </div>
+  const links = sections.map(s => ({
+    id: s.id,
+    el: document.querySelector(s.link),
+  }));
 
-          <div class="form-row">
-            <label for="type">お問い合わせ種別<span style="color:#f88;"> *</span></label>
-            <select id="type" name="type" required>
-              <option value="">選択してください</option>
-              <option value="プロダクト企画・開発について">プロダクト企画・開発について</option>
-              <option value="デスク環境・アクセサリについて">デスク環境・アクセサリについて</option>
-              <option value="UI / インタラクション設計について">UI / インタラクション設計について</option>
-              <option value="メディア・取材について">メディア・取材について</option>
-              <option value="その他">その他</option>
-            </select>
-          </div>
+  if (!links.length) return;
 
-          <!-- ★ その他を選んだとき用の自由入力欄 -->
-          <div class="form-row">
-            <label for="type-detail">お問い合わせ種別（その他の内容）</label>
-            <input
-              id="type-detail"
-              type="text"
-              name="type-detail"
-              placeholder="その他を選んだ場合、その内容をご記入ください。"
-            >
-          </div>
+  const onScroll = () => {
+    const y = window.pageYOffset;
+    const header = document.querySelector('.site-header');
+    const headerHeight = header ? header.offsetHeight : 0;
+    const threshold = headerHeight + 40;
 
-          <div class="form-row">
-            <label for="message">お問い合わせ内容<span style="color:#f88;"> *</span></label>
-            <textarea
-              id="message"
-              name="message"
-              rows="5"
-              placeholder="ご相談内容・現在の状況・ご希望のイメージなどをご自由にお書きください。"
-              required
-            ></textarea>
-          </div>
+    let currentId = null;
+    for (const s of sections) {
+      const secEl = document.querySelector(s.id);
+      if (!secEl) continue;
+      const top = secEl.offsetTop - threshold;
+      if (y >= top) currentId = s.id;
+    }
 
-          <div class="form-row">
-            <label for="ref">参考リンク・URL</label>
-            <textarea
-              id="ref"
-              name="ref"
-              rows="3"
-              placeholder="参考になるWebサイト、SNS、GitHubリポジトリなどがあればご記入ください。"
-            ></textarea>
-          </div>
+    links.forEach(l => {
+      if (!l.el) return;
+      if (l.id === currentId) {
+        l.el.classList.add('is-current');
+      } else {
+        l.el.classList.remove('is-current');
+      }
+    });
+  };
 
-          <div class="form-actions">
-            <button type="submit" class="btn-primary">Googleフォームへ進む</button>
-          </div>
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('load', onScroll);
+})();
 
-          <p class="section-lead" style="margin-top:12px;font-size:12px;color:#c0c4d0;">
-            次の画面で内容をご確認いただき、必要に応じて添付ファイルを追加してから送信してください。
-          </p>
-        </form>
-      </div>
-    </div>
-  </section>
-</main>
+// TrickAble お問い合わせフォーム → Googleフォームへリダイレクト
+(function () {
+  const form = document.getElementById('ta-contact-form');
+  if (!form) return;
 
-<footer class="site-footer">
-  <div class="footer-inner">
-    <div class="footer-col footer-brand">
-      <div class="footer-logo">
-        <svg class="logo-svg" viewBox="0 0 61.57 16.99" aria-hidden="true">
-          <g>
-            <g>
-              <rect x="0" y="0" width="10.62" height="2.12" />
-              <rect x="4.25" y="2.12" width="2.12" height="14.86" />
-              <rect x="8.49" y="4.25" width="2.12" height="12.74" />
-              <rect x="10.62" y="6.37" width="2.12" height="2.12" />
-              <rect x="14.86" y="8.49" width="2.12" height="8.49" />
-              <rect x="14.86" y="4.25" width="2.12" height="2.12" />
-              <rect x="19.11" y="6.37" width="4.25" height="2.12" />
-              <rect x="19.11" y="14.86" width="4.25" height="2.12" />
-              <rect x="19.11" y="8.49" width="2.12" height="6.37" />
-              <rect x="42.46" y="2.12" width="2.12" height="14.86" />
-              <rect x="44.59" y="14.86" width="4.25" height="2.12" />
-              <rect x="46.71" y="6.37" width="2.12" height="8.49" />
-              <rect x="44.59" y="6.37" width="2.12" height="2.12" />
-              <rect x="33.97" y="0" width="2.12" height="16.99" />
-              <rect x="38.22" y="0" width="2.12" height="16.99" />
-              <rect x="36.09" y="0" width="2.12" height="2.12" />
-              <rect x="36.09" y="8.49" width="2.12" height="2.12" />
-              <rect x="50.96" y="0" width="2.12" height="16.99" />
-              <rect x="55.2" y="6.37" width="6.37" height="2.12" />
-              <rect x="55.2" y="8.49" width="2.12" height="6.37" />
-              <rect x="55.2" y="14.86" width="6.37" height="2.12" />
-              <rect x="59.45" y="8.49" width="2.12" height="4.25" />
-              <rect x="57.33" y="10.62" width="2.12" height="2.12" />
-            </g>
-            <rect x="25.48" y="0" width="2.12" height="16.99" />
-            <rect x="27.6" y="10.62" width="2.12" height="2.12" />
-            <rect x="29.73" y="12.74" width="2.12" height="4.25" />
-            <rect x="29.73" y="4.25" width="2.12" height="6.37" />
-          </g>
-        </svg>
-      </div>
-      <p class="footer-copy">
-        Trickで全てをAbleにする。<br>
-        小さなトリックで、日常の「できない」を「できる」に。
-      </p>
-    </div>
-    <div class="footer-col">
-      <h4>会社概要</h4>
-      <ul>
-        <li>TrickAble Inc.（株式会社 TrickAble）</li>
-        <li>TEL 03-1234-5678</li>
-      </ul>
-    </div>
-    <div class="footer-col">
-      <h4>コンタクト</h4>
-      <ul>
-        <li><a href="contact.html">お問い合わせフォーム</a></li>
-        <li><a href="mailto:info@trickable.example">info@trickable.example</a></li>
-      </ul>
-    </div>
-    <div class="footer-col">
-      <h4>サイトマップ</h4>
-      <ul class="sitemap">
-        <li><a href="index.html">トップ</a></li>
-        <li><a href="index.html#philosophy">理念</a></li>
-        <li><a href="index.html#activities">事業・活動概要</a></li>
-        <li><a href="index.html#contact">お問い合わせ</a></li>
-        <li><a href="about.html">会社概要</a></li>
-      </ul>
-    </div>
-  </div>
-  <div class="footer-bottom">
-    <small>© 20XX TrickAble Inc.</small>
-  </div>
-</footer>
+  const typeSelect    = document.getElementById('type');
+  const typeDetailRow = document.getElementById('type-detail-row');
 
-<script src="assets/js/main.js"></script>
-</body>
-</html>
+  // ★ その他欄の表示・非表示を切り替え
+  const updateTypeDetailVisibility = () => {
+    if (!typeSelect || !typeDetailRow) return;
+    const v = typeSelect.value.trim();
+    if (v === 'その他') {
+      typeDetailRow.style.display = '';
+    } else {
+      typeDetailRow.style.display = 'none';
+    }
+  };
+
+  // 初期状態では隠しておく
+  if (typeDetailRow) {
+    typeDetailRow.style.display = 'none';
+  }
+  if (typeSelect) {
+    typeSelect.addEventListener('change', updateTypeDetailVisibility);
+  }
+
+  // Google フォームの事前入力ベースURL
+  const GOOGLE_FORM_BASE =
+    'https://docs.google.com/forms/d/e/1FAIpQLSchlnIKnr24x_NjLuduVKcPFfgoxDsuH5OpgHce6eUvyswR6Q/viewform?usp=pp_url';
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    const nameEl       = document.getElementById('name');
+    const emailEl      = document.getElementById('email');
+    const telEl        = document.getElementById('tel');
+    const orgEl        = document.getElementById('org');
+    const typeEl       = document.getElementById('type');
+    const typeDetailEl = document.getElementById('type-detail');
+    const messageEl    = document.getElementById('message');
+    const refEl        = document.getElementById('ref');
+
+    const name       = nameEl       ? nameEl.value.trim()       : '';
+    const email      = emailEl      ? emailEl.value.trim()      : '';
+    const tel        = telEl        ? telEl.value.trim()        : '';
+    const org        = orgEl        ? orgEl.value.trim()        : '';
+    const type       = typeEl       ? typeEl.value.trim()       : '';
+    const typeDetail = typeDetailEl ? typeDetailEl.value.trim() : '';
+    const message    = messageEl    ? messageEl.value.trim()    : '';
+    const ref        = refEl        ? refEl.value.trim()        : '';
+
+    // 必須チェック
+    if (!name || !email || !type || !message) {
+      alert('お名前・メールアドレス・お問い合わせ種別・お問い合わせ内容を入力してください。');
+      return;
+    }
+
+    const params = new URLSearchParams();
+
+    // entry マッピング
+    // &entry.88881716                     = お名前
+    // &entry.741727298                    = メールアドレス
+    // &entry.1753640320                   = 電話番号
+    // &entry.2144785332                   = 所属
+    // &entry.1682830520                   = 種別（通常） or "__other_option__"（その他）
+    // &entry.1682830520.other_option_response = その他の内容
+    // &entry.1713069066                   = お問い合わせ内容
+    // &entry.1711366111                   = 参考リンク
+
+    params.set('entry.88881716', name);
+    params.set('entry.741727298', email);
+
+    if (tel) {
+      params.set('entry.1753640320', tel);
+    }
+
+    if (org) {
+      params.set('entry.2144785332', org);
+    }
+
+    if (type === 'その他') {
+      params.set('entry.1682830520', '__other_option__');
+      params.set(
+        'entry.1682830520.other_option_response',
+        typeDetail || 'その他'
+      );
+    } else if (type) {
+      params.set('entry.1682830520', type);
+    }
+
+    params.set('entry.1713069066', message);
+
+    if (ref) {
+      params.set('entry.1711366111', ref);
+    }
+
+    const redirectUrl = `${GOOGLE_FORM_BASE}&${params.toString()}`;
+
+    window.location.href = redirectUrl;
+  });
+})();
