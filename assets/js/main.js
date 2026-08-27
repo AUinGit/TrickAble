@@ -71,14 +71,13 @@ document.addEventListener('click', (e) => {
   const form = document.getElementById('ta-contact-form');
   if (!form) return;
 
-  // ★ あなたの Google フォームの「viewform?usp=pp_url」までの部分
+  // あなたの Google フォームの事前入力URLの「ベース」
   const GOOGLE_FORM_BASE =
     'https://docs.google.com/forms/d/e/1FAIpQLSchlnIKnr24x_NjLuduVKcPFfgoxDsuH5OpgHce6eUvyswR6Q/viewform?usp=pp_url';
 
   form.addEventListener('submit', (e) => {
     e.preventDefault();
 
-    // TrickAble 側の入力値を取得
     const nameEl    = document.getElementById('name');
     const emailEl   = document.getElementById('email');
     const telEl     = document.getElementById('tel');
@@ -95,37 +94,18 @@ document.addEventListener('click', (e) => {
     const message = messageEl ? messageEl.value.trim() : '';
     const ref     = refEl     ? refEl.value.trim()     : '';
 
-    // 必須チェック
     if (!name || !email || !type || !message) {
       alert('お名前・メールアドレス・お問い合わせ種別・お問い合わせ内容を入力してください。');
       return;
     }
 
-    // Googleフォーム項目へのマッピング
-    //  - entry.88881716                    ← お名前
-    //  - entry.1753640320                  ← 電話番号
-    //  - entry.2144785332                  ← ご所属
-    //  - entry.1682830520                  ← お問い合わせ種別
-    //  - entry.1682830520.other_option_response ← 「その他」の自由入力
-    //  - entry.1713069066                  ← お問い合わせ内容
-    //  - entry.1711366111                  ← 参考リンク・URL
-
     const params = new URLSearchParams();
 
-    // お名前
-    params.set('entry.88881716', name);
+    // entry マッピング
+    params.set('entry.88881716', name);           // お名前
+    if (tel) params.set('entry.1753640320', tel); // 電話番号
+    if (org) params.set('entry.2144785332', org); // ご所属
 
-    // 電話番号
-    if (tel) {
-      params.set('entry.1753640320', tel);
-    }
-
-    // ご所属
-    if (org) {
-      params.set('entry.2144785332', org);
-    }
-
-    // お問い合わせ種別
     if (type === 'その他') {
       params.set('entry.1682830520', '__other_option__');
       params.set('entry.1682830520.other_option_response', 'その他');
@@ -133,14 +113,11 @@ document.addEventListener('click', (e) => {
       params.set('entry.1682830520', type);
     }
 
-    // お問い合わせ内容
-    // （メールアドレスも本文末尾にくっつけておくと履歴として見やすい）
     const messageWithMail = `${message}\n\n[送信元メールアドレス] ${email}`;
-    params.set('entry.1713069066', messageWithMail);
+    params.set('entry.1713069066', messageWithMail); // お問い合わせ内容＋メール
 
-    // 参考リンク
     if (ref) {
-      params.set('entry.1711366111', ref);
+      params.set('entry.1711366111', ref);        // 参考リンク
     }
 
     const redirectUrl = `${GOOGLE_FORM_BASE}&${params.toString()}`;
