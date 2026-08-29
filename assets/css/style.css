@@ -19,12 +19,21 @@
   box-sizing: border-box;
 }
 
-html, body {
+/* ここを修正: html と body を分離し、html 全体を黒で塗る */
+html {
+  margin: 0;
+  padding: 0;
+  background: #000; /* ビューポート外側も含めて黒で塗りつぶす */
+}
+
+/* body に元のグラデーションやフォント指定を集約 */
+body {
   margin: 0;
   padding: 0;
   font-family: var(--font-jp);
   color: var(--text-main);
   background: radial-gradient(circle at top, #1f2633 0, var(--bg) 50%);
+  min-height: 100vh; /* フッター下に素の背景が見えないようにする */
 }
 
 a {
@@ -42,8 +51,10 @@ img {
   display: block;
 }
 
+/* サブページは body 側だけ背景色を変える */
 body.subpage {
   background: #0c0e12;
+  min-height: 100vh;
 }
 
 /* レスポンシブ補助 */
@@ -166,6 +177,7 @@ body.subpage {
     text-align: center;
   }
 }
+
 /* セクション共通 */
 
 main {
