@@ -19,17 +19,15 @@
   box-sizing: border-box;
 }
 
-/* ここをさらに強く修正 */
-/* 画面全体を確実に黒で塗る */
+/* 画面全体をしっかり黒で塗る */
 html {
   margin: 0;
   padding: 0;
   height: 100%;
-  background-color: #000000; /* 常に黒 */
+  background-color: #000000;
 }
 
-/* body にフォントやグラデーションを設定 */
-/* 背景色も必ず黒を指定しておく */
+/* body にグラデーション＋テキスト設定 */
 body {
   margin: 0;
   padding: 0;
@@ -37,20 +35,34 @@ body {
   font-family: var(--font-jp);
   color: var(--text-main);
 
-  /* ベタ塗りとしての背景色（グラデーションが読み込めない/オーバースクロール用） */
+  /* ベースの塗りつぶし */
   background-color: #000000;
 
-  /* その上にグラデーションを重ねる */
+  /* その上にグラデーション */
   background-image: radial-gradient(circle at top, #1f2633 0, var(--bg) 50%);
   background-repeat: no-repeat;
-  background-attachment: fixed;
   background-size: cover;
 }
 
-/* サブページ用：こちらもベタ塗りを必ず指定する */
+/* サブページはフラットな濃紺背景 */
 body.subpage {
   background-color: #0c0e12;
-  background-image: none;   /* サブページはグラデーションなしのフラット背景 */
+  background-image: none;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
 }
 
 /* レスポンシブ補助 */
@@ -72,12 +84,8 @@ body.subpage {
   top: 0;
   z-index: 20;
   backdrop-filter: blur(12px);
-  background: linear-gradient(
-    to bottom,
-    rgba(10,12,18,0.95),
-    rgba(10,12,18,0.7),
-    transparent
-  );
+  /* 上まで完全に黒基調で塗る（透明にしない） */
+  background-color: #05060a;
   border-bottom: 1px solid rgba(255,255,255,0.03);
 }
 
@@ -150,26 +158,26 @@ body.subpage {
 @media (max-width: 720px) {
   .header-inner {
     padding-inline: 12px;
-    flex-wrap: wrap;
+    flex-wrap: wrap;              /* ロゴとナビを縦に折り返し可能に */
     justify-content: center;
   }
 
   .logo-mark {
     flex: 0 0 100%;
     display: flex;
-    justify-content: center;
+    justify-content: center;      /* ロゴを中央に */
   }
 
   .logo-svg {
-    width: 140px;
+    width: 140px;                 /* モバイルでは少し大きく見せてもOK */
   }
 
   .global-nav {
     flex: 0 0 100%;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 10px 14px;
-    font-size: 11px;
+    justify-content: center;      /* ナビを中央寄せ */
+    flex-wrap: wrap;              /* 幅が足りなければ自動で折り返す */
+    gap: 10px 14px;               /* 縦横の余白 */
+    font-size: 11px;              /* 文字を少し小さく */
     text-align: center;
   }
 }
