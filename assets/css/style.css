@@ -19,42 +19,38 @@
   box-sizing: border-box;
 }
 
-/* ここを修正: html と body を分離し、html 全体を黒で塗る */
+/* ここをさらに強く修正 */
+/* 画面全体を確実に黒で塗る */
 html {
   margin: 0;
   padding: 0;
-  background: #000; /* ビューポート外側も含めて黒で塗りつぶす */
+  height: 100%;
+  background-color: #000000; /* 常に黒 */
 }
 
-/* body に元のグラデーションやフォント指定を集約 */
+/* body にフォントやグラデーションを設定 */
+/* 背景色も必ず黒を指定しておく */
 body {
   margin: 0;
   padding: 0;
+  min-height: 100%;
   font-family: var(--font-jp);
   color: var(--text-main);
-  background: radial-gradient(circle at top, #1f2633 0, var(--bg) 50%);
-  min-height: 100vh; /* フッター下に素の背景が見えないようにする */
+
+  /* ベタ塗りとしての背景色（グラデーションが読み込めない/オーバースクロール用） */
+  background-color: #000000;
+
+  /* その上にグラデーションを重ねる */
+  background-image: radial-gradient(circle at top, #1f2633 0, var(--bg) 50%);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
-}
-
-a:hover {
-  text-decoration: underline;
-}
-
-img {
-  max-width: 100%;
-  height: auto;
-  display: block;
-}
-
-/* サブページは body 側だけ背景色を変える */
+/* サブページ用：こちらもベタ塗りを必ず指定する */
 body.subpage {
-  background: #0c0e12;
-  min-height: 100vh;
+  background-color: #0c0e12;
+  background-image: none;   /* サブページはグラデーションなしのフラット背景 */
 }
 
 /* レスポンシブ補助 */
@@ -154,26 +150,26 @@ body.subpage {
 @media (max-width: 720px) {
   .header-inner {
     padding-inline: 12px;
-    flex-wrap: wrap;              /* ロゴとナビを縦に折り返し可能に */
+    flex-wrap: wrap;
     justify-content: center;
   }
 
   .logo-mark {
     flex: 0 0 100%;
     display: flex;
-    justify-content: center;      /* ロゴを中央に */
+    justify-content: center;
   }
 
   .logo-svg {
-    width: 140px;                 /* モバイルでは少し大きく見せてもOK */
+    width: 140px;
   }
 
   .global-nav {
     flex: 0 0 100%;
-    justify-content: center;      /* ナビを中央寄せ */
-    flex-wrap: wrap;              /* 幅が足りなければ自動で折り返す */
-    gap: 10px 14px;               /* 縦横の余白 */
-    font-size: 11px;              /* 文字を少し小さく */
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px 14px;
+    font-size: 11px;
     text-align: center;
   }
 }
