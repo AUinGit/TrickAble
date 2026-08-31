@@ -1,30 +1,94 @@
 // assets/js/main.js
 
+// 共通ヘッダー／フッターを読み込む
+(async () => {
+  const containers = document.querySelectorAll('[data-include]');
+
+  // 共通パーツがないページ（将来の単独ページなど）のため
+  if (!containers.length) {
+    setupCurrentNav();
+    setupSmoothScroll();
+    setupSectionCurrent();
+    setupContactFormRedirect();
+    return;
+  }
+
+  for (const el of containers) {
+    const url = el.getAttribute('data-include');
+    if (!url) continue;
+
+    try {
+      const res = await fetch(url);
+      if (!res.ok) {
+        console.error('include failed (status):', url, res.status);
+        continue;
+      }
+      const html = await res.text();
+      el.innerHTML = html;
+    } catch (e) {
+      console.error('include failed (exception):', url, e);
+    }
+  }
+
+  // 差し込みが終わってから各種セットアップ
+  setupCurrentNav();
+  setupSmoothScroll();
+  setupSectionCurrent();
+  setupContactFormRedirect();
+})();
+
+// 現在ページに応じて .global-nav に is-current を付与
+function setupCurrentNav() {
+  const body = document.body;
+  const page = body.getAttribute('data-page') || 'home';
+  const nav = document.querySelector('.global-nav');
+  if (!nav) return;
+
+  const links = nav.querySelectorAll('a');
+  links.forEach(a => a.classList.remove('is-current'));
+
+  if (page === 'about') {
+    const link = nav.querySelector('a[href="about.html"]');
+    if (link) link.classList.add('is-current');
+  } else if (page === 'contact') {
+    const link = nav.querySelector('a[href="contact.html"], a[href$="#contact"]');
+    if (link) link.classList.add('is-current');
+  } else {
+    // home の場合はスクロール連動で付与する
+  }
+}
+
 // アンカーリンクをスムーススクロールにする
-document.addEventListener('click', (e) => {
-  const target = e.target.closest('a.js-scroll, a[href^="#"]');
-  if (!target) return;
+function setupSmoothScroll() {
+  document.addEventListener('click', (e) => {
+    const target = e.target.closest('a.js-scroll, a[href^="#"]');
+    if (!target) return;
 
-  const href = target.getAttribute('href');
-  if (!href || !href.startsWith('#')) return;
+    const href = target.getAttribute('href');
+    if (!href || !href.startsWith('#')) return;
 
-  const el = document.querySelector(href);
-  if (!el) return;
+    const el = document.querySelector(href);
+    if (!el) return;
 
-  e.preventDefault();
-  const header = document.querySelector('.site-header');
-  const headerHeight = header ? header.offsetHeight : 0;
-  const rect = el.getBoundingClientRect();
-  const offset = rect.top + window.pageYOffset - headerHeight - 8;
+    e.preventDefault();
+    const header = document.querySelector('.site-header');
+    const headerHeight = header ? header.offsetHeight : 0;
+    const rect = el.getBoundingClientRect();
+    const offset = rect.top + window.pageYOffset - headerHeight - 8;
 
-  window.scrollTo({
-    top: offset,
-    behavior: 'smooth',
+    window.scrollTo({
+      top: offset,
+      behavior: 'smooth',
+    });
   });
-});
+}
 
-// セクション位置に応じてヘッダーナビに is-current を付与
-(function () {
+// セクション位置に応じてヘッダーナビに is-current を付与（トップページ）
+function setupSectionCurrent() {
+  const body = document.body;
+  const page = body.getAttribute('data-page') || 'home';
+  if (page !== 'home') return;
+
   const sections = [
     { id: '#philosophy', link: 'a[href$="#philosophy"]' },
     { id: '#activities', link: 'a[href$="#activities"]' },
@@ -64,10 +128,10 @@ document.addEventListener('click', (e) => {
 
   window.addEventListener('scroll', onScroll, { passive: true });
   window.addEventListener('load', onScroll);
-})();
+}
 
-// TrickAble お問い合わせフォーム → Googleフォームへリダイレクト
-(function () {
+// TrickAble お問い合わせフォーム   Googleフォームへリダイレクト
+function setupContactFormRedirect() {
   const form = document.getElementById('ta-contact-form');
   if (!form) return;
 
@@ -102,16 +166,7 @@ document.addEventListener('click', (e) => {
 
     const params = new URLSearchParams();
 
-    // 事前入力URLと同じ構造で詰める
-    // &entry.88881716                     = お名前
-    // &entry.741727298                    = メールアドレス
-    // &entry.1753640320                   = 電話番号
-    // &entry.2144785332                   = 所属
-    // &entry.1682830520                   = 種別 or "__other_option__"
-    // &entry.1682830520.other_option_response = その他の内容
-    // &entry.1713069066                   = お問い合わせ内容
-    // &entry.1711366111                   = 参考リンク
-
+    // 事前入力URLと同じ構造
     params.set('entry.88881716', name);
     params.set('entry.741727298', email);
 
@@ -140,7 +195,6 @@ document.addEventListener('click', (e) => {
     }
 
     const redirectUrl = `${GOOGLE_FORM_BASE}&${params.toString()}`;
-
     window.location.href = redirectUrl;
   });
-})();
+}
