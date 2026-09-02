@@ -80,14 +80,20 @@ img {
 /* ヘッダー */
 
 .site-header {
-  position: sticky;
+  /* position: sticky; を fixed に変更 */
+  position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
+
   z-index: 20;
+
   backdrop-filter: blur(12px);
-  /* 上まで完全に黒基調で塗る（透明にしない） */
-  background-color: #05060a;
+  /* 好きな透明度で OK（半透明に戻したいなら rgba で） */
+  background-color: rgba(5, 6, 10, 0.78);
   border-bottom: 1px solid rgba(255,255,255,0.03);
 }
+
 
 .header-inner {
   max-width: 1040px;
